@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { BarChart3, ClipboardList, FileText, FolderKanban, LogOut, User, FileStack } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useState } from 'react';
 import { clearSession, getToken } from '@/lib/api';
 
 const nav = [
@@ -24,17 +24,24 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     if (!isLogin && !getToken()) router.replace('/login');
   }, [isLogin, router]);
 
-  const userName = useMemo(() => {
-    if (typeof window === 'undefined') return 'Perfil';
+  const [userName, setUserName] = useState('Perfil');
+
+  useEffect(() => {
+    if (isLogin) return;
+
     try {
       const raw = window.localStorage.getItem('agforest_user');
-      if (!raw) return 'Perfil';
+      if (!raw) {
+        setUserName('Perfil');
+        return;
+      }
+
       const user = JSON.parse(raw);
-      return user.full_name || user.email || 'Perfil';
+      setUserName(user.full_name || user.email || 'Perfil');
     } catch {
-      return 'Perfil';
+      setUserName('Perfil');
     }
-  }, [pathname]);
+  }, [isLogin, pathname]);
 
   if (isLogin) return <>{children}</>;
 
