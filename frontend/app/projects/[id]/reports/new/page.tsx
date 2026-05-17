@@ -73,7 +73,8 @@ export default function NewReportPage({ params }: { params: { id: string } }) {
         action={<Link href={`/projects?id=${projectId}`}><Button variant="secondary"><ArrowLeft size={15} /> Volver</Button></Link>}
       />
       <ErrorBanner message={error} />
-      <Card className="p-6">
+      <div className="p-6">
+            <Card className="p-6">
         <div className="mb-8 grid gap-3 md:grid-cols-3">
           {steps.map((label, index) => (
             <div key={label} className="flex items-center gap-3">
@@ -126,7 +127,8 @@ export default function NewReportPage({ params }: { params: { id: string } }) {
             </div>
           </div>
         )}
-      </Card>
+            </Card>
+      </div>
     </>
   );
 }

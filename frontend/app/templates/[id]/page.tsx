@@ -72,79 +72,81 @@ export default function TemplateEditorPage({ params }: { params: { id: string } 
 
   return (
     <>
-      <PageHeader
-        title="Editar plantilla"
-        description={template?.name || 'Plantilla'}
-        action={
-          <div className="flex gap-2">
-            <Link href="/templates"><Button variant="secondary"><ArrowLeft size={15} /> Volver</Button></Link>
-            <Button onClick={save} disabled={loading}><Save size={15} /> {loading ? 'Guardando…' : 'Guardar cambios'}</Button>
-          </div>
-        }
-      />
-      <ErrorBanner message={error} />
-      {saved ? <div className="mb-4 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700">Plantilla guardada correctamente.</div> : null}
-      {template ? (
-        <div className="grid gap-5 lg:grid-cols-[0.95fr_1.05fr]">
-          <Card className="p-5">
-            <h2 className="font-black text-slate-950">Estructura del informe</h2>
-            <div className="mt-4 space-y-3">
-              {template.sections.map((section, index) => (
-                <div key={`${section.title}-${index}`} className="rounded-2xl border border-slate-200 bg-white p-4">
-                  <div className="mb-3 flex items-center justify-between gap-2">
-                    <div className="flex items-center gap-2 text-xs font-bold text-slate-400"><GripVertical size={15} /> {index + 1}</div>
-                    <div className="flex gap-1">
-                      <Button type="button" variant="ghost" className="px-2 py-1" onClick={() => moveSection(index, -1)}>↑</Button>
-                      <Button type="button" variant="ghost" className="px-2 py-1" onClick={() => moveSection(index, 1)}>↓</Button>
-                      <Button type="button" variant="ghost" className="px-2 py-1 text-rose-600" onClick={() => update('sections', template.sections.filter((_, i) => i !== index))}><Trash2 size={14} /></Button>
+      <div className="p-6">
+            <PageHeader
+              title="Editar plantilla"
+              description={template?.name || 'Plantilla'}
+              action={
+                <div className="flex gap-2">
+                  <Link href="/templates"><Button variant="secondary"><ArrowLeft size={15} /> Volver</Button></Link>
+                  <Button onClick={save} disabled={loading}><Save size={15} /> {loading ? 'Guardando…' : 'Guardar cambios'}</Button>
+                </div>
+              }
+            />
+            <ErrorBanner message={error} />
+            {saved ? <div className="mb-4 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700">Plantilla guardada correctamente.</div> : null}
+            {template ? (
+              <div className="grid gap-5 lg:grid-cols-[0.95fr_1.05fr]">
+                <Card className="p-5">
+                  <h2 className="font-black text-slate-950">Estructura del informe</h2>
+                  <div className="mt-4 space-y-3">
+                    {template.sections.map((section, index) => (
+                      <div key={`${section.title}-${index}`} className="rounded-2xl border border-slate-200 bg-white p-4">
+                        <div className="mb-3 flex items-center justify-between gap-2">
+                          <div className="flex items-center gap-2 text-xs font-bold text-slate-400"><GripVertical size={15} /> {index + 1}</div>
+                          <div className="flex gap-1">
+                            <Button type="button" variant="ghost" className="px-2 py-1" onClick={() => moveSection(index, -1)}>↑</Button>
+                            <Button type="button" variant="ghost" className="px-2 py-1" onClick={() => moveSection(index, 1)}>↓</Button>
+                            <Button type="button" variant="ghost" className="px-2 py-1 text-rose-600" onClick={() => update('sections', template.sections.filter((_, i) => i !== index))}><Trash2 size={14} /></Button>
+                          </div>
+                        </div>
+                        <div className="space-y-3">
+                          <Input value={section.title} onChange={(e) => updateSection(index, { title: e.target.value })} placeholder="Título de sección" />
+                          <Input value={section.description} onChange={(e) => updateSection(index, { description: e.target.value })} placeholder="Descripción" />
+                          <Textarea value={section.instructions} onChange={(e) => updateSection(index, { instructions: e.target.value })} placeholder="Instrucciones para la IA en esta sección" className="min-h-[70px]" />
+                          <label className="flex items-center gap-2 text-sm text-slate-600">
+                            <input type="checkbox" checked={section.required} onChange={(e) => updateSection(index, { required: e.target.checked })} /> Obligatoria
+                          </label>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <Button variant="secondary" className="mt-4 w-full" onClick={() => update('sections', [...template.sections, { ...emptySection }])}><Plus size={15} /> Añadir sección</Button>
+                </Card>
+
+                <Card className="p-5">
+                  <h2 className="font-black text-slate-950">Instrucciones para la IA</h2>
+                  <div className="mt-4 space-y-4">
+                    <div>
+                      <Label>Nombre</Label>
+                      <Input value={template.name} onChange={(e) => update('name', e.target.value)} />
+                    </div>
+                    <div>
+                      <Label>Cliente</Label>
+                      <Input value={template.client} onChange={(e) => update('client', e.target.value)} />
+                    </div>
+                    <div>
+                      <Label>Descripción</Label>
+                      <Textarea value={template.description} onChange={(e) => update('description', e.target.value)} className="min-h-[80px]" />
+                    </div>
+                    <div>
+                      <Label>Instrucciones globales</Label>
+                      <Textarea value={template.ai_instructions} onChange={(e) => update('ai_instructions', e.target.value)} className="min-h-[210px]" />
+                    </div>
+                    <div>
+                      <Label>Campos obligatorios (separados por coma)</Label>
+                      <Input value={requiredText} onChange={(e) => { setRequiredText(e.target.value); setSaved(false); }} />
+                      <div className="mt-3 flex flex-wrap gap-2">
+                        {requiredText.split(',').map((item) => item.trim()).filter(Boolean).map((item) => (
+                          <span key={item} className="rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-bold text-emerald-700 ring-1 ring-emerald-100">{item}</span>
+                        ))}
+                      </div>
                     </div>
                   </div>
-                  <div className="space-y-3">
-                    <Input value={section.title} onChange={(e) => updateSection(index, { title: e.target.value })} placeholder="Título de sección" />
-                    <Input value={section.description} onChange={(e) => updateSection(index, { description: e.target.value })} placeholder="Descripción" />
-                    <Textarea value={section.instructions} onChange={(e) => updateSection(index, { instructions: e.target.value })} placeholder="Instrucciones para la IA en esta sección" className="min-h-[70px]" />
-                    <label className="flex items-center gap-2 text-sm text-slate-600">
-                      <input type="checkbox" checked={section.required} onChange={(e) => updateSection(index, { required: e.target.checked })} /> Obligatoria
-                    </label>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <Button variant="secondary" className="mt-4 w-full" onClick={() => update('sections', [...template.sections, { ...emptySection }])}><Plus size={15} /> Añadir sección</Button>
-          </Card>
-
-          <Card className="p-5">
-            <h2 className="font-black text-slate-950">Instrucciones para la IA</h2>
-            <div className="mt-4 space-y-4">
-              <div>
-                <Label>Nombre</Label>
-                <Input value={template.name} onChange={(e) => update('name', e.target.value)} />
+                </Card>
               </div>
-              <div>
-                <Label>Cliente</Label>
-                <Input value={template.client} onChange={(e) => update('client', e.target.value)} />
-              </div>
-              <div>
-                <Label>Descripción</Label>
-                <Textarea value={template.description} onChange={(e) => update('description', e.target.value)} className="min-h-[80px]" />
-              </div>
-              <div>
-                <Label>Instrucciones globales</Label>
-                <Textarea value={template.ai_instructions} onChange={(e) => update('ai_instructions', e.target.value)} className="min-h-[210px]" />
-              </div>
-              <div>
-                <Label>Campos obligatorios (separados por coma)</Label>
-                <Input value={requiredText} onChange={(e) => { setRequiredText(e.target.value); setSaved(false); }} />
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {requiredText.split(',').map((item) => item.trim()).filter(Boolean).map((item) => (
-                    <span key={item} className="rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-bold text-emerald-700 ring-1 ring-emerald-100">{item}</span>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </Card>
-        </div>
-      ) : null}
+            ) : null}
+      </div>
     </>
   );
 }

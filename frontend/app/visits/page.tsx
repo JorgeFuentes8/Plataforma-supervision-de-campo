@@ -34,31 +34,31 @@ export default function VisitsPage() {
 
   return (
     <>
-      <PageHeader title="Visitas" description="Registro de visitas de campo" />
-      <ErrorBanner message={error} />
-      <Card className="overflow-hidden">
-        {rows.length ? (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm">
-              <thead className="bg-slate-50 text-xs uppercase text-slate-500">
-                <tr><th className="px-5 py-3">Fecha</th><th className="px-5 py-3">Proyecto</th><th className="px-5 py-3">Notas</th><th className="px-5 py-3">Adjuntos</th></tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
-                {rows.map((visit) => (
-                  <tr key={visit.id} className="hover:bg-slate-50">
-                    <td className="px-5 py-4 font-bold"><Link href={`/visits/${visit.id}`} className="hover:text-emerald-700">{formatDate(visit.visit_date)}</Link></td>
-                    <td className="px-5 py-4 text-slate-700">{visit.project?.name || '—'}</td>
-                    <td className="px-5 py-4 text-slate-600">{truncate(visit.text_notes, 120)}</td>
-                    <td className="px-5 py-4 text-slate-500">{visit.assets.length} archivos</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        ) : (
-          <div className="p-6"><EmptyState title="Sin visitas registradas" description="Crea una visita desde el detalle de un proyecto." /></div>
-        )}
-      </Card>
+            <PageHeader title="Visitas" description="Registro de visitas de campo" />
+            <ErrorBanner message={error} />
+            <Card className="overflow-hidden">
+              {rows.length ? (
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-sm">
+                    <thead className="bg-slate-50 text-xs uppercase text-slate-500">
+                      <tr><th className="px-5 py-3">Fecha</th><th className="px-5 py-3">Proyecto</th><th className="px-5 py-3">Notas</th><th className="px-5 py-3">Adjuntos</th></tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100">
+                      {rows.map((visit) => (
+                        <tr key={visit.id} className="hover:bg-slate-50">
+                          <td className="px-5 py-4 font-bold"><Link href={`/visits/${visit.id}`} className="hover:text-emerald-700">{formatDate(visit.visit_date)}</Link></td>
+                          <td className="px-5 py-4 text-slate-700">{visit.project?.name || '—'}</td>
+                          <td className="px-5 py-4 text-slate-600">{truncate(visit.text_notes, 120)}</td>
+                          <td className="px-5 py-4 text-slate-500">{visit.assets.length} archivos</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                <div className="p-6"><EmptyState title="Sin visitas registradas" description="Crea una visita desde el detalle de un proyecto." /></div>
+              )}
+            </Card>
     </>
   );
 }

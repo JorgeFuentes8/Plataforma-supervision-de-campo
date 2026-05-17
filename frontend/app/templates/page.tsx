@@ -49,40 +49,40 @@ export default function TemplatesPage() {
 
   return (
     <>
-      <PageHeader
-        title="Plantillas de informe"
-        description="Gestiona las plantillas que usa la IA para generar informes"
-        action={<Button onClick={createTemplate} disabled={loading}><Plus size={16} /> Nueva plantilla</Button>}
-      />
-      <ErrorBanner message={error} />
-      <Card className="overflow-hidden">
-        {templates.length ? (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm">
-              <thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500">
-                <tr>
-                  <th className="px-5 py-3">Nombre</th>
-                  <th className="px-5 py-3">Cliente</th>
-                  <th className="px-5 py-3">Descripción</th>
-                  <th className="px-5 py-3 text-right">Acciones</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
-                {templates.map((template) => (
-                  <tr key={template.id} className="hover:bg-slate-50/70">
-                    <td className="px-5 py-4 font-semibold text-slate-900"><Link href={`/templates/${template.id}`} className="hover:text-emerald-700">{template.name}</Link></td>
-                    <td className="px-5 py-4 text-slate-600">{template.client || '—'}</td>
-                    <td className="px-5 py-4 text-slate-600">{truncate(template.description, 90)}</td>
-                    <td className="px-5 py-4 text-right"><Link href={`/templates/${template.id}`} className="inline-flex rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700"><MoreVertical size={16} /></Link></td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        ) : (
-          <div className="p-6"><EmptyState title="Sin plantillas" description="Crea una plantilla para indicar estructura, tono y campos obligatorios a la IA." /></div>
-        )}
-      </Card>
+            <PageHeader
+              title="Plantillas de informe"
+              description="Gestiona las plantillas que usa la IA para generar informes"
+              action={<Button onClick={createTemplate} disabled={loading}><Plus size={16} /> Nueva plantilla</Button>}
+            />
+            <ErrorBanner message={error} />
+            <Card className="overflow-hidden">
+              {templates.length ? (
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-sm">
+                    <thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500">
+                      <tr>
+                        <th className="px-5 py-3">Nombre</th>
+                        <th className="px-5 py-3">Cliente</th>
+                        <th className="px-5 py-3">Descripción</th>
+                        <th className="px-5 py-3 text-right">Acciones</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100">
+                      {templates.map((template) => (
+                        <tr key={template.id} className="hover:bg-slate-50/70">
+                          <td className="px-5 py-4 font-semibold text-slate-900"><Link href={`/templates/${template.id}`} className="hover:text-emerald-700">{template.name}</Link></td>
+                          <td className="px-5 py-4 text-slate-600">{template.client || '—'}</td>
+                          <td className="px-5 py-4 text-slate-600">{truncate(template.description, 90)}</td>
+                          <td className="px-5 py-4 text-right"><Link href={`/templates/${template.id}`} className="inline-flex rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700"><MoreVertical size={16} /></Link></td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                <div className="p-6"><EmptyState title="Sin plantillas" description="Crea una plantilla para indicar estructura, tono y campos obligatorios a la IA." /></div>
+              )}
+            </Card>
     </>
   );
 }
